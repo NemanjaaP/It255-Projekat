@@ -11,6 +11,7 @@ export class HeaderComponent implements OnInit {
 
   
   public isAuth: boolean;
+  public isAdmin: string;
 
   title = 'app';
 
@@ -19,6 +20,10 @@ export class HeaderComponent implements OnInit {
   }
 
   public ngOnInit() {
+
+    this.isAdmin = localStorage.getItem('administrator');
+    // console.log("ADMINISTRATOR JE:", this.isAdmin);
+    
     if (localStorage.getItem('token')) {
       this.isAuth = true;
     } else {
@@ -28,6 +33,7 @@ export class HeaderComponent implements OnInit {
 
   public logOut() {
     localStorage.removeItem('token');
+    localStorage.removeItem('administrator');
     this.isAuth = false;
     location.reload();
   }

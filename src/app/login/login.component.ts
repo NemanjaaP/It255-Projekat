@@ -30,9 +30,11 @@ export class LoginComponent implements OnInit {
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
 
     this._http.post('http://localhost/it255/it255/loginservice.php', data, { headers: headers}).subscribe((result) => {
-          const obj = JSON.parse(result['_body']);
-          localStorage.setItem('token', obj.token);
-          location.reload();
+         const obj = JSON.parse(result['_body']);
+         localStorage.setItem('token', obj.token);
+         localStorage.setItem('administrator', obj.administrator);
+         console.log(obj);
+        //location.reload();
        },
         err => {
           alert(JSON.parse(err._body).error);
