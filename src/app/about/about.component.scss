@@ -1,0 +1,25 @@
+#wrapper {
+    img {
+        max-width: 300px;
+        max-height: 200px;
+        transform: rotate(18deg);
+    }
+    a {
+        color: white;
+    }
+    a:hover {
+        color: rgb(186, 180, 180);
+    }
+    margin-top:12rem;
+    margin-bottom:6rem;
+    color:white;
+    font-size:22px;
+}
+
+.tekst {
+    text-align: right;
+}
+
+.slika {
+    text-align: center;
+}

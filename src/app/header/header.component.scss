@@ -1,0 +1,14 @@
+.navbar {
+    background: linear-gradient(to bottom, rgb(0, 0, 0), rgba(8, 8, 8, 0.703));
+    min-height: 90px;
+    //da se alajnuje text desno treba 
+    a {
+        color: white;
+    }
+}
+
+.navbar-brand {
+    padding: 0 15px;
+    height: 90px;
+    line-height: 90px;
+}
