@@ -35,6 +35,7 @@ export class RegistrationComponent implements OnInit {
     this._http.post('http://localhost/it255/it255/registerservice.php', data, { headers: headers }).subscribe((result) => {
       const obj = JSON.parse(result['_body']);
       localStorage.setItem('token', obj.token);
+      location.reload();
       this._router.navigateByUrl('');
     },
       err => {

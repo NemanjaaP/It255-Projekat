@@ -1,3 +1,25 @@
-<p>
-  balance works!
-</p>
+<div class="container-fluid" id="wrapper">
+    <div class="row">
+        <div class="col-md-4 ico">
+
+        </div>
+
+        <div class="col-md-4 ico">
+            <div class=" item-wrapper">
+                <table style="width:100%">
+                    <tr>
+                        <th>Ico name</th>
+                        <th>Balance</th>
+                    </tr>
+                    <tr *ngFor="let ico of data">
+                        <td>{{ico.name}}</td>
+                        <td>{{ico.balance}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-md-4 ico">
+
+        </div>
+    </div>

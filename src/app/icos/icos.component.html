@@ -1,15 +1,25 @@
-<div class="col-lg-12">
-    <div class="row">
-        <form class="navbar-form navbar-left" role="search">
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search" name="value" [(ngModel)]="value">
-            </div>
-        </form>
-    </div>
-</div>
-
 <div class="container" id="wrapper">
-    <div class="row">
+
+    <div class="row prvi">
+
+        <div class="col-md-4">
+        </div>
+
+        <div class="col-md-4">
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search by value" name="value" [(ngModel)]="value">
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-4">
+        </div>
+    </div>
+
+
+
+    <div class="row drugi">
         <div class="col-md-4 ico" *ngFor="let ico of data | searchpipe:value">
             <div class=" item-wrapper">
                 <img class="img-fluid " src={{ico.imgpath}} alt="slika1 " />
@@ -17,6 +27,9 @@
                 <p>{{ico.short_description}}</p>
                 <p>Price: {{ico.value}}</p>
                 <a href="show-ico/{{ico.ico_id}}/{{ico.name}}/{{ico.description}}/{{ico.value}}"><button class="button">Learn more</button></a>
+                <div *ngIf="isAdmin==1">
+                    <button (click)="delete(ico.ico_id)">Obrisi</button>
+                </div>
             </div>
         </div>
     </div>

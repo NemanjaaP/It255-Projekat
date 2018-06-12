@@ -22,7 +22,6 @@ export class HeaderComponent implements OnInit {
   public ngOnInit() {
 
     this.isAdmin = localStorage.getItem('administrator');
-    // console.log("ADMINISTRATOR JE:", this.isAdmin);
     
     if (localStorage.getItem('token')) {
       this.isAuth = true;
@@ -36,6 +35,8 @@ export class HeaderComponent implements OnInit {
     localStorage.removeItem('administrator');
     this.isAuth = false;
     location.reload();
+    this._router.navigateByUrl('');
+
   }
 
 }

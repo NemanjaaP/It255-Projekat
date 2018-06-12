@@ -1,0 +1,34 @@
+<div class="container-fluid" id="wrapper">
+    <div class="row prvi">
+        <div class="col-md-4 col-sm-9 col-sx-12">
+        </div>
+
+        <div class="col-md-4 col-sm-9 col-sx-12 forma">
+            <form role="form" [formGroup]="addIcoForm" id="wrapper">
+                <div class="form-group">
+                    <input type="text" class="form-control" formControlName='name' placeholder="Enter ICO name">
+                </div>
+                <div class="form-group">
+                    <textarea rows="5" class="form-control" formControlName='description' placeholder="Enter ICO description"></textarea>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" formControlName='short_description' placeholder="Enter ICO short description (100 character max)" maxlength=" 100 ">
+                </div>
+                <div class="form-group ">
+                    <input type="text " class="form-control " formControlName='website' placeholder="Enter ICO website link ">
+                </div>
+                <div class="form-group ">
+                    <input type="text " class="form-control " formControlName='value' placeholder="Enter ICO value ">
+                </div>
+                <div class="form-group ">
+                    <input type="text " class="form-control " formControlName='imgpath' placeholder="Enter ICO image path ">
+                </div>
+                <button (click)="addIco()" class="btn btn-default ">Add ICO</button>
+            </form>
+        </div>
+
+        <div class="col-md-4 col-sm-9 col-sx-12 ">
+        </div>
+
+    </div>
+</div>

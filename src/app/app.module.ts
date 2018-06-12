@@ -22,6 +22,7 @@ import { BuyScamTokenComponent } from './buy-scam-token/buy-scam-token.component
 import { SearchpipePipe } from './pipes/searchpipe.pipe';
 import { ShowIcoComponent } from './show-ico/show-ico.component';
 import { BalanceComponent } from './balance/balance.component';
+import { AddicoComponent } from './addico/addico.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { BalanceComponent } from './balance/balance.component';
     SearchpipePipe,
     ShowIcoComponent,
     BalanceComponent,
+    AddicoComponent,
   ],
   imports: [
     BrowserModule,

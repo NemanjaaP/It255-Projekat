@@ -33,8 +33,8 @@ export class LoginComponent implements OnInit {
          const obj = JSON.parse(result['_body']);
          localStorage.setItem('token', obj.token);
          localStorage.setItem('administrator', obj.administrator);
-         console.log(obj);
-        //location.reload();
+         location.reload();
+         this._router.navigateByUrl('');
        },
         err => {
           alert(JSON.parse(err._body).error);

@@ -7,6 +7,7 @@ import { FakeIcoGuideComponent } from '../fake-ico-guide/fake-ico-guide.componen
 import { IcosComponent } from '../icos/icos.component';
 import { ShowIcoComponent } from '../show-ico/show-ico.component';
 import { BalanceComponent } from '../balance/balance.component';
+import { AddicoComponent } from '../addico/addico.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,10 @@ const routes: Routes = [
   {
     path:'balance',
     component: BalanceComponent
+  }, 
+  {
+    path:'addico',
+    component: AddicoComponent
   }
 ];
 @NgModule({

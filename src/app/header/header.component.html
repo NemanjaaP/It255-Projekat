@@ -25,6 +25,10 @@
                 <a class="nav-link" routerLink="/balance">View balance</a>
             </li>
 
+            <li class="nav-item" routerLink="/addico" *ngIf="isAuth && isAdmin==1">
+                <a class="nav-link" routerLink="/addico">Add ICO</a>
+            </li>
+
             <li class="nav-item" *ngIf="isAuth">
                 <a class="nav-link" (click)="logOut()">Logout</a>
             </li>
