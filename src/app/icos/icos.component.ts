@@ -11,12 +11,15 @@ export class IcosComponent implements OnInit {
   public data: any = [];
   public data2: any = [];
   isAdmin = localStorage.getItem('administrator');
+  public token: string;
+  public admin_local: string;
 
   constructor(private _http: Http, private _router: Router) {
   }
 //-----------------------------------------PRIKAZ KORISNIKU-----------------------------------------
   
   ngOnInit() {
+
     const headers = new Headers();
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
     headers.append('token', localStorage.getItem('token'));
@@ -34,7 +37,10 @@ export class IcosComponent implements OnInit {
 //-----------------------------------------METODA ZA BRISANJE ICO-A OD STRANE ADMINISTRATORA-----------------------------------------
   public delete(id:string) {
 
-    const data = 'id=' + id;
+
+    this.token = localStorage.getItem('token');
+    this.admin_local = localStorage.getItem('administrator');
+    const data = 'id=' + id + "&token=" + this.token + "&admin_local=" + this.admin_local;
 
 
     const headers = new Headers();
