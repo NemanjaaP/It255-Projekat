@@ -255,16 +255,19 @@ function add_ico($admin_local,$token, $name, $description, $short_description, $
 
 //------------------------------------------------------- DELETE ICO ---------------------------------------------------------------
 
-function delete_ico($id) {
+function delete_ico($token, $admin_local, $id) {
         global $conn;
         $rarray = array();
-        if(checkIfLoggedIn()){
-            $result = $conn->query("DELETE FROM ico WHERE ico_id=".$id);
-            $rarray['success'] = "Deleted successfully";
-        } else{
-            $rarray['error'] = "Please log in";
-            header('HTTP/1.1 401 Unauthorized');
-        }
+        if(check_authorization($token, $admin_local, 1)) {
+             if(checkIfLoggedIn()){
+                $result = $conn->query("DELETE FROM ico WHERE ico_id=".$id);
+                $rarray['success'] = "Deleted successfully";
+            } else{
+                $rarray['error'] = "Please log in";
+                header('HTTP/1.1 401 Unauthorized');
+            }
+        } 
+
         return json_encode($rarray);
 }
 
