@@ -43,7 +43,7 @@ const routes: Routes = [
     component: AddicoComponent
   },
   {
-    path:'show-ico',
+    path:'show-ico/:ico_id',
     component: ShowIcoComponent
   }
 ];

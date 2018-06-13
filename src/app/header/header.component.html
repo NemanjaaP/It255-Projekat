@@ -34,9 +34,10 @@
             </li>
         </ul>
 
-        <div id="balance" *ngFor="let balance of data">
-            Balance: {{balance.scamcoin_balance}}
+        <div *ngIf="isAdmin==0">
+            <div id="balance" *ngFor="let balance of data">
+                Balance: {{balance.scamcoin_balance}}
+            </div>
         </div>
-
     </div>
 </nav>

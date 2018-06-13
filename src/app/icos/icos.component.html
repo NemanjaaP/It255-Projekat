@@ -27,9 +27,9 @@
                 <p class="desc">{{ico.short_description}}</p>
                 <p>Price: {{ico.value}}</p>
                 <p>Average rate: {{ico.average_rate}}</p>
-                <a *ngIf="isAdmin==0" href="show-ico/{{ico.ico_id}}/{{ico.name}}/{{ico.description}}/{{ico.value}}"><button class="button">Learn more</button></a>
+                <a *ngIf="isAdmin==0" routerLink="/show-ico/{{ico.ico_id}}/{{ico.name}}/{{ico.description}}/{{ico.value}}"><button class="button">Learn more</button></a>
                 <div *ngIf="isAdmin==1">
-                    <a routerLink="/show-ico"><button class="button">Update ICO/Change</button></a> <br/><br/>
+                    <a routerLink="/show-ico/{{ico.ico_id}}"><button class="button">Update ICO/Change</button></a> <br/><br/>
                     <button (click)="delete(ico.ico_id)">Delete</button>
                 </div>
             </div>

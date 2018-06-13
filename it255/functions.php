@@ -223,20 +223,28 @@ function get_user_id($token) {
         return $id;
     }
 }
-
+function check_authorization($token, $admin_local, $for) {
+    $admin = checkAdmin($token);
+    if($admin == $for && $admin == $admin_local) {
+        return true;
+    } else {
+        return false;
+    }
+}
 //------------------------------------------------------- ADD ICO ---------------------------------------------------------------
-function add_ico($name, $description, $short_description, $website, $value, $imgpath){
+function add_ico($admin_local,$token, $name, $description, $short_description, $website, $value, $imgpath){
     global $conn;
     $rarray = array();
     $errors = "";
-
-    if($errors == ""){
+    
+    if(check_authorization($token, $admin_local, 1)){
         $administrator = 0;
         $stmt = $conn->prepare("INSERT INTO ico (name, description, short_description, website, value, imgpath) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("ssssis", $name, $description, $short_description, $website,$value,$imgpath);
         $stmt->execute();
     } else{
         header('HTTP/1.1 400 Bad request');
+        $errors = "Unauthorized access.";
         $rarray['error'] = json_encode($errors);
     }
     
@@ -262,11 +270,13 @@ function delete_ico($id) {
 
 //------------------------------------------------------- UPDATE ICO ---------------------------------------------------------------
 
-function update_ico($id,$name, $description, $short_description, $website, $value, $imgpath){
+function update_ico( $token,$admin_local, $id,$name, $description, $short_description, $website, $value, $imgpath){
     global $conn;
     $rarray = array();
     $errors = "";
-    if($errors == ""){
+
+   
+    if(check_authorization($token, $admin_local, 1)){
         $stmt = $conn->prepare("UPDATE ico SET name = ?, description = ?, short_description= ?, website = ?, value= ?, imgpath = ? WHERE ico.ico_id =".$id);
         $stmt->bind_param("ssssis", $name, $description, $short_description, $website,$value,$imgpath); 
         $stmt->execute();
@@ -283,6 +293,7 @@ function update_ico($id,$name, $description, $short_description, $website, $valu
 
 function update_balance($token, $add, $ico_id, $value){
     global $conn;
+
     $rarray = array();
     $id = get_user_id($token);
     $stanje = get_ico_balance($id,$ico_id);
@@ -422,19 +433,23 @@ function ico_rate($token, $ico_id, $new_vote) {
 
     $check_if_rated = check_if_rated($token, $ico_id);
     $user_id = get_user_id($token);
+    $admin = checkAdmin($token);
 
     try{
-        if($check_if_rated == 0) {
-            update_avg_rate($token, $ico_id, $new_vote);
-            $stmt = $conn->prepare("INSERT INTO ico_user_vote (user_id, ico_id, vote) VALUES (?, ?, ?)");
-            $stmt->bind_param("iii", $user_id, $ico_id, $new_vote);
-            $stmt->execute();
-        } else {
-            update_avg_rate($token, $ico_id, $new_vote);
-            $stmt = $conn->prepare("UPDATE ico_user_vote SET vote = ? WHERE user_id=? AND ico_id=?");
-            $stmt->bind_param("iii", $new_vote, $user_id, $ico_id); 
-            $stmt->execute();
-        }
+        if($admin == 0){
+
+            if($check_if_rated == 0) {
+                update_avg_rate($token, $ico_id, $new_vote);
+                $stmt = $conn->prepare("INSERT INTO ico_user_vote (user_id, ico_id, vote) VALUES (?, ?, ?)");
+                $stmt->bind_param("iii", $user_id, $ico_id, $new_vote);
+                $stmt->execute();
+            } else {
+                update_avg_rate($token, $ico_id, $new_vote);
+                $stmt = $conn->prepare("UPDATE ico_user_vote SET vote = ? WHERE user_id=? AND ico_id=?");
+                $stmt->bind_param("iii", $new_vote, $user_id, $ico_id); 
+                $stmt->execute();
+            }
+        } 
     } catch (Exception $e) {
         echo 'Caught exception: ',  $e->getMessage(), "\n";
 
@@ -547,6 +562,9 @@ function update_avg_rate($token,$ico_id, $new_vote) {
 
     
 }
+
+//--------------------------------------GET ADMIN VALUE---------------------------------------
+
 
 
 ?>

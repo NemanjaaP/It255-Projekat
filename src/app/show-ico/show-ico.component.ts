@@ -37,6 +37,10 @@ export class ShowIcoComponent implements OnInit, OnDestroy {
   public data2: any = [];
   public data3: any = [];
 
+  public token: string;
+  public admin_local: string;
+
+
   input: any;
 
   constructor(private route: ActivatedRoute,
@@ -112,10 +116,12 @@ public vote(number:any) {
       this.ico_id = params['ico_id'];
     })
 
+    this.token = localStorage.getItem('token');
+    this.admin_local = localStorage.getItem('administrator');
 
-    const data = 'name=' + this.updateForm.value.name + '&description=' + this.updateForm.value.description + '&short_description=' + this.updateForm.value.short_description + '&website=' + this.updateForm.value.website + '&value=' + this.updateForm.value.value + '&imgpath=' + this.updateForm.value.imgpath + '&ico_id=' + this.ico_id;
-    console.log(this.updateForm.value.name);
 
+    const data = 'token=' + this.token + '&admin_local=' + this.admin_local + '&name=' + this.updateForm.value.name + '&description=' + this.updateForm.value.description + '&short_description=' + this.updateForm.value.short_description + '&website=' + this.updateForm.value.website + '&value=' + this.updateForm.value.value + '&imgpath=' + this.updateForm.value.imgpath + '&ico_id=' + this.ico_id;
+   
     const headers = new Headers();
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
 
