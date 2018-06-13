@@ -143,12 +143,12 @@ function get_icos(){
     global $conn;
     $rarray = array();
     if(checkIfLoggedIn()){
-        $result = $conn->query("SELECT ico.ico_id, ico.name, ico.description, ico.short_description, ico.website, ico.value,ico.imgpath FROM ico");
+        $result = $conn->query("SELECT * FROM ico");
         $num_rows = $result->num_rows;
         $icos = array();
         if($num_rows > 0)
         {
-            $result2 = $conn->query("SELECT ico.ico_id,ico.name, ico.description, ico.short_description, ico.website, ico.value,ico.imgpath FROM ico");
+            $result2 = $conn->query("SELECT * FROM ico");
             while($row = $result2->fetch_assoc()) {
                 $ico = array();
                 $ico['ico_id'] = $row['ico_id'];
@@ -158,6 +158,8 @@ function get_icos(){
                 $ico['value'] = $row['value'];
                 $ico['website'] = $row['website'];
                 $ico['imgpath'] = $row['imgpath'];
+                $ico['average_rate'] = $row['average_rate'];
+
                 array_push($icos,$ico);
             }
         }
@@ -380,6 +382,171 @@ function get_scam_balance($token) {
         }
         return $scam_balance;
     }
+
 }
+
+function get_scam_balance2($token) {
+    global $conn;
+    $rarray = array();
+    if(checkIfLoggedIn()){
+
+        $user = get_user_id($token);
+        $result = $conn->query("SELECT scamcoin_balance FROM users WHERE user_id=".$user);
+        $num_rows = $result->num_rows;
+
+        $balances = array();
+
+        if($num_rows > 0)
+        {
+            $result2 = $conn->query("SELECT scamcoin_balance FROM users WHERE user_id=".$user);
+            while($row = $result2->fetch_assoc()) {
+                $balance = array();
+                $balance['scamcoin_balance'] = $row['scamcoin_balance'];
+                array_push($balances,$balance);
+            }
+        }
+        $rarray['balances'] = $balances;
+        return json_encode($rarray);
+    } else{
+        $rarray['error'] = "Please log in";
+        header('HTTP/1.1 401 Unauthorized');
+        return json_encode($rarray);
+    }
+
+}
+
+//------------------------------------------------------- ICO RATE - MAIN FUNCTION FOR UPDATING VOTES ---------------------------------------------------------------
+
+function ico_rate($token, $ico_id, $new_vote) {
+    global $conn;
+
+    $check_if_rated = check_if_rated($token, $ico_id);
+    $user_id = get_user_id($token);
+
+    try{
+        if($check_if_rated == 0) {
+            update_avg_rate($token, $ico_id, $new_vote);
+            $stmt = $conn->prepare("INSERT INTO ico_user_vote (user_id, ico_id, vote) VALUES (?, ?, ?)");
+            $stmt->bind_param("iii", $user_id, $ico_id, $new_vote);
+            $stmt->execute();
+        } else {
+            update_avg_rate($token, $ico_id, $new_vote);
+            $stmt = $conn->prepare("UPDATE ico_user_vote SET vote = ? WHERE user_id=? AND ico_id=?");
+            $stmt->bind_param("iii", $new_vote, $user_id, $ico_id); 
+            $stmt->execute();
+        }
+    } catch (Exception $e) {
+        echo 'Caught exception: ',  $e->getMessage(), "\n";
+
+   }
+}
+//------------------------------------------------------- ICO GET RATE - GETTING AVERAGE RATE ---------------------------------------------------------------
+
+function get_ico_rate($ico_id) {
+    global $conn;
+
+    $query = 'SELECT average_rate FROM ico WHERE ico_id = ?';
+    $result = $conn->prepare($query);
+    $result->bind_param('i', $ico_id);
+    $average_rate = array();
+    if ($result->execute()) {
+        $result = $result->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $average_rate = $row['average_rate'];
+        }
+        return $average_rate;
+    }
+}
+
+//------------------------------------------------------- ICO CHECK IF ALREADY RATED ---------------------------------------------------------------
+
+function check_if_rated($token, $ico_id) {
+    global $conn;
+
+    $user_id = get_user_id($token);
+
+    $query = 'SELECT vote FROM ico_user_vote WHERE user_id = ? AND ico_id= ?';
+    $result = $conn->prepare($query);
+    $result->bind_param('ii', $user_id, $ico_id);
+    $result->execute();
+    $result->store_result();
+    $num_rows = $result->num_rows;
+    $rate = array();
+
+    if($num_rows > 0){
+        $query = 'SELECT vote FROM ico_user_vote WHERE user_id = ? AND ico_id= ?';
+        $result1 = $conn->prepare($query);
+        $result1->bind_param('ii', $user_id, $ico_id);
+        if ($result1->execute()) {
+            $result1 = $result1->get_result();
+            while ($row = $result1->fetch_assoc()) {
+                $rate = $row['vote'];
+                echo "ovo je".$row['vote'];
+            }
+            return $rate;
+        }
+    }else {
+        $rate = 0;
+        return $rate;
+    }
+
+    
+}
+//---------------------------------------------GETTING NUMBER OF VOTES FOR SPECIFIC ICO------------------------------------
+function get_number_of_ico_votes($ico_id) {
+    global $conn;
+    $query = 'SELECT vote FROM ico_user_vote WHERE ico_id = ?';
+    $result = $conn->prepare($query);
+    $result->bind_param('i', $ico_id);
+    $result->execute();
+    $result->store_result();
+    $num_rows = $result->num_rows;
+    return $num_rows;
+}
+
+function update_avg_rate($token,$ico_id, $new_vote) {
+    global $conn;
+
+    $check = check_if_rated($token, $ico_id);//check vraca vrednost koja je prethodno uneta od strane korisnika
+    echo "prvi".$check;
+    if($check > 0) {
+
+        $num_of_votes = get_number_of_ico_votes($ico_id);
+        
+        // echo "broj glasova je: ".$num_of_votes;
+        // echo "drigi je: ".$check;
+        // echo "novi upis je: ".$new_vote;
+        // $vrednostsad = get_ico_rate($ico_id);
+        // echo "vrednost srednja trenutno je: ".$vrednostsad;
+
+        $current_rate = get_ico_rate($ico_id) - $check + $new_vote;
+        $final_sum = $current_rate/$num_of_votes;
+
+        $stmt = $conn->prepare("UPDATE ico SET average_rate = ? WHERE ico_id=?");
+        $stmt->bind_param("di",$final_sum, $ico_id); 
+        $stmt->execute();
+    } else {
+        $num_of_votes = get_number_of_ico_votes($ico_id) + 1;
+        $current_rate = get_ico_rate($ico_id) + $new_vote;
+
+        // $sad = get_ico_rate($ico_id);
+        // echo "vrednost uzeta je: ".$sad;
+        // echo "novi glas je:".$new_vote;
+
+        $final_sum = $current_rate/$num_of_votes;
+
+        // echo "num of votes:".$num_of_votes."current rate:".$current_rate;
+        // echo "final sum".$final_sum;
+    
+        $stmt = $conn->prepare("UPDATE ico SET average_rate = ? WHERE ico_id=?");
+        $stmt->bind_param("di",$final_sum, $ico_id); 
+        $stmt->execute();
+    }
+
+    
+
+    
+}
+
 
 ?>

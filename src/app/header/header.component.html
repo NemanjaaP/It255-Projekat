@@ -9,7 +9,7 @@
                 <a class="nav-link" routerLink="/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item" routerLink="/fake-ico-guide" routerLinkActive="active">
-                <a class="nav-link" routerLink="/fake-ico-guide">Fake ICO guide</a>
+                <a class="nav-link" routerLink="/fake-ico-guide">Fake ICO</a>
             </li>
             <li class="nav-item" routerLink="/login" routerLinkActive="active" *ngIf="!isAuth">
                 <a class="nav-link" routerLink="/login">Login</a>
@@ -21,7 +21,7 @@
                 <a class="nav-link" routerLink="/icos">View ICOs</a>
             </li>
 
-            <li class="nav-item" routerLink="/balance" *ngIf="isAuth">
+            <li class="nav-item" routerLink="/balance" *ngIf="isAuth && isAdmin==0">
                 <a class="nav-link" routerLink="/balance">View balance</a>
             </li>
 
@@ -33,5 +33,10 @@
                 <a class="nav-link" (click)="logOut()">Logout</a>
             </li>
         </ul>
+
+        <div id="balance" *ngFor="let balance of data">
+            Balance: {{balance.scamcoin_balance}}
+        </div>
+
     </div>
 </nav>

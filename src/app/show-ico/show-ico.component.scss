@@ -1,4 +1,17 @@
 #wrapper {
     color: white;
     text-align: center;
+    span:hover {
+        color: yellow;
+    }
+    margin-top:8rem;
+    margin-bottom: 8rem;
+    button,
+    input {
+        border-radius: 5px;
+        margin-left: 10px;
+    }
+    span {
+        margin-left: 5px;
+    }
 }

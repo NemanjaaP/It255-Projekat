@@ -14,7 +14,8 @@ export class IcosComponent implements OnInit {
 
   constructor(private _http: Http, private _router: Router) {
   }
-
+//-----------------------------------------PRIKAZ KORISNIKU-----------------------------------------
+  
   ngOnInit() {
     const headers = new Headers();
     headers.append('Content-Type', 'application/x-www-form-urlencoded');
@@ -30,9 +31,8 @@ export class IcosComponent implements OnInit {
       );
   }
 
-//METODA ZA BRISANJE ICO-A OD STRANE ADMINISTRATORA
+//-----------------------------------------METODA ZA BRISANJE ICO-A OD STRANE ADMINISTRATORA-----------------------------------------
   public delete(id:string) {
-    // tslint:disable-next-line:max-line-length
 
     const data = 'id=' + id;
 

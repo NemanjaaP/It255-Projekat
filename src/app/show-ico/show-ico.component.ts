@@ -35,12 +35,14 @@ export class ShowIcoComponent implements OnInit, OnDestroy {
 
   public data: any = [];
   public data2: any = [];
+  public data3: any = [];
+
   input: any;
 
   constructor(private route: ActivatedRoute,
     private router: Router, private _http: Http) { }
 
-  //prikaz podataka ako je obican korisnik u pitanju ----------------------------- KORISNIK
+  //prikaz podataka ako je obican korisnik u pitanju ----------------------------- KORISNIK -------------------------------------------------
   ngOnInit() {
     this.routeSub = this.route.params.subscribe(params => {
       this.ico_id = params['ico_id'];
@@ -48,6 +50,7 @@ export class ShowIcoComponent implements OnInit, OnDestroy {
       this.description = params['description'];
       this.value = params['value'];
       // this.imgpath=params['imgpath'];
+
     })
   }
 
@@ -79,29 +82,30 @@ export class ShowIcoComponent implements OnInit, OnDestroy {
       );
   }
 
+  //--------------------------------------------------------------FUNKCIJA ZA OCENJIVANJE ICOa---------------------------------------------------------------------------
+public vote(number:any) {
+  const token = localStorage.getItem('token');
+  const data3 = 'token=' + token + '&ico_id=' + this.ico_id + '&vote=' + number;
+  console.log(this.ico_id);
+
+  const headers = new Headers();
+  headers.append('Content-Type', 'application/x-www-form-urlencoded');
+
+  this._http.post('http://localhost/it255/it255/rateservice.php', data3, { headers: headers })
+  .subscribe(data3 => {
+    this.data3 = JSON.parse(data3['_body']);  
+    console.log(this.data3);
+    console.log(token);
+  },
+    err => {
+      this.router.navigate(['']);
+    }
+  );
+
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  //funkcija za update ------------------ ADMINISTRATOR
+  //funkcija za update ------------------------------------------------------ ADMINISTRATOR ------------------------------------------------------------------------------------------
   public update() {
 
     this.routeSub = this.route.params.subscribe(params => {
@@ -123,6 +127,7 @@ export class ShowIcoComponent implements OnInit, OnDestroy {
       }
     );
   }
+
 
 
 }

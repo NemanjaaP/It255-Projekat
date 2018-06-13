@@ -41,6 +41,10 @@ const routes: Routes = [
   {
     path:'addico',
     component: AddicoComponent
+  },
+  {
+    path:'show-ico',
+    component: ShowIcoComponent
   }
 ];
 @NgModule({

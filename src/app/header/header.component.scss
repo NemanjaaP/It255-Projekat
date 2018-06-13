@@ -1,4 +1,6 @@
 .navbar {
+    // position: fixed;
+    // width: 100%;
     background: linear-gradient(to bottom, rgb(0, 0, 0), rgba(8, 8, 8, 0.703));
     min-height: 90px;
     //da se alajnuje text desno treba 
@@ -11,4 +13,10 @@
     padding: 0 15px;
     height: 90px;
     line-height: 90px;
+    float: right;
+}
+
+#balance {
+    float: right;
+    color: white;
 }
